@@ -1,7 +1,9 @@
-import React from 'react'
+import styles from "./page.module.css";
 
-export const page = () => {
+export default function Home() {
   return (
-    <div>page</div>
-  )
+    <main className={styles.main}>
+      
+    </main>
+  );
 }
