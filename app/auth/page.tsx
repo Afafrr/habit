@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import Container from "@/components/ui/container";
 import { signup, login, UserCredentials } from "./actions";
 import { FormEvent, useEffect, useState } from "react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 type handleSubmit = (
   e: FormEvent<HTMLFormElement>,
@@ -18,6 +20,8 @@ export default function SignUp() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoginForm, setIsLoginForm] = useState(false);
   const [isSignupForm, setIsSignupForm] = useState(true);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   //2 above states are used to set buttons submit id
   //effect is setting this state after
@@ -34,21 +38,44 @@ export default function SignUp() {
   //supabase signup/login as fn
   const handleSubmit: handleSubmit = async (e, fn) => {
     e.preventDefault();
+    setIsLoading(true);
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const res = await fn({ email, password });
+    const { error } = await fn({ email, password });
+    if (error) {
+      setError(error);
+      setIsLoading(false);
+    }
   };
+
+  const onBtnClick = (state: boolean) => {
+    setIsLogin(state);
+    setError("");
+  };
+
   //styles
   const borderBtnStyle = "border-dotted border-2 border-slate-500 ";
   const whiteBtnHover =
     "hover:bg-slate-900 hover:text-white hover:duration-300";
+  const borderError = error && "border-red-600 border-[1.5px]";
 
   return (
     <Container className="flex flex-col justify-center items-center w-full h-full">
+      <Alert
+        className={`absolute top-5 min-w-[250px] w-fit max-w-[400px] my-2 transition-top duration-150 ${
+          !error && "-top-[100px]"
+        }`}
+        variant="destructive"
+      >
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
       <div
         className={`w-full max-w-[500px] md:mb-14 rounded-3xl overflow-hidden border-solid border-green-950 shadow-2xl shadow-green-900`}
       >
+        {/* container for two forms */}
         <div
           className={`custom-grid relative transition-left  transition-all duration-500 ease-in-out ${
             isLogin ? "left-0" : "-left-full"
@@ -64,12 +91,13 @@ export default function SignUp() {
             <form
               id="loginForm"
               className="flex flex-col relative justify-center gap-3"
-              onSubmit={(e) => handleSubmit(e, signup)}
+              onSubmit={(e) => handleSubmit(e, login)}
             >
               <Label htmlFor="email" className="mt-4">
                 Email
               </Label>
               <Input
+                className={borderError}
                 id="email"
                 type="email"
                 placeholder="xyz@gmail.com"
@@ -80,6 +108,7 @@ export default function SignUp() {
                 Password
               </Label>
               <Input
+                className={borderError}
                 id="password"
                 type="password"
                 placeholder="Password"
@@ -89,8 +118,9 @@ export default function SignUp() {
               />
             </form>
             <Button
-              onClick={() => setIsLogin(true)}
+              onClick={() => onBtnClick(true)}
               form={isLoginForm ? "loginForm" : undefined}
+              disabled={isLoading}
               className={`self-end w-full mt-2 transition-all duration-500 ease-in-out ${borderBtnStyle} 
                   ${
                     isLogin
@@ -111,12 +141,13 @@ export default function SignUp() {
             <form
               id="signupForm"
               className="flex flex-col justify-center gap-2"
-              onSubmit={(e) => handleSubmit(e, login)}
+              onSubmit={(e) => handleSubmit(e, signup)}
             >
               <Label htmlFor="name" className="mt-3 ">
                 Name
               </Label>
               <Input
+                className={borderError}
                 id="name"
                 type="name"
                 placeholder="Michael"
@@ -128,6 +159,7 @@ export default function SignUp() {
                 Email
               </Label>
               <Input
+                className={borderError}
                 id="email2"
                 type="email"
                 placeholder="xyz@gmail.com"
@@ -138,6 +170,7 @@ export default function SignUp() {
                 Password
               </Label>
               <Input
+                className={borderError}
                 id="password2"
                 type="password"
                 name="password"
@@ -149,8 +182,9 @@ export default function SignUp() {
               </p>
             </form>
             <Button
-              onClick={() => setIsLogin(false)}
+              onClick={() => onBtnClick(false)}
               form={isSignupForm ? "signupForm" : undefined}
+              disabled={isLoading}
               className={`w-full bottom-0 mt-5 transition-all duration-500 ease-in-out ${borderBtnStyle} ${
                 !isLogin
                   ? "bg-slate-900 border-none"

@@ -12,9 +12,7 @@ export type UserCredentials = {
 export async function login(formData: UserCredentials) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(formData);
-
   if (error) {
-    console.log("ERROR", error);
     return { error: error.message };
   }
 
