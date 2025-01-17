@@ -12,4 +12,4 @@ Website to track your habits
 ---
 ## Screenshots
 ### Login/Register
-https://github.com/user-attachments/assets/deb1165a-9071-44e6-b67b-817202356b88
+https://github.com/user-attachments/assets/e847d1aa-b39f-4b60-be15-300d71095dad
