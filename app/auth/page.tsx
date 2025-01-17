@@ -94,7 +94,7 @@ export default function SignUp() {
               className={`self-end w-full mt-2 transition-all duration-500 ease-in-out ${borderBtnStyle} 
                   ${
                     isLogin
-                      ? "bg-slate-900"
+                      ? "bg-slate-900 border-none"
                       : `${whiteBtnHover} w-3/5 sm:w-1/2 h-8 -mr-0.5 rotate-90 -translate-y-14 bg-white text-slate-700`
                   } origin-bottom-right`}
             >
@@ -153,7 +153,7 @@ export default function SignUp() {
               form={isSignupForm ? "signupForm" : undefined}
               className={`w-full bottom-0 mt-5 transition-all duration-500 ease-in-out ${borderBtnStyle} ${
                 !isLogin
-                  ? "bg-slate-900"
+                  ? "bg-slate-900 border-none"
                   : `${whiteBtnHover} w-3/5 sm:w-1/2 h-8 -mr-51 -rotate-90 -ml-0.5 -translate-y-14 bg-white text-slate-700`
               } origin-bottom-left`}
             >
