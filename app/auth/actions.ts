@@ -2,10 +2,13 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-type UserCredentials = {
+
+export type UserCredentials = {
+  name?: string;
   email: string;
   password: string;
 };
+
 export async function login(formData: UserCredentials) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(formData);
