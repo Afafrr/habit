@@ -3,28 +3,25 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Container from "@/components/ui/container";
-import { signup, login, UserCredentials } from "./actions";
+import { signup, login } from "./actions";
 import { FormEvent, useEffect, useState } from "react";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import CustomAlert from "@/components/ui/customAlert";
 
 type handleSubmit = (
   e: FormEvent<HTMLFormElement>,
-  fn: ({}: UserCredentials) => Promise<{
-    error: string;
-  }>
+  fn: typeof login | typeof signup
 ) => void;
 
 export default function SignUp() {
   //state whether login form is current
   const [isLogin, setIsLogin] = useState(true);
+  //two form states determining a form id which button will submit
   const [isLoginForm, setIsLoginForm] = useState(false);
   const [isSignupForm, setIsSignupForm] = useState(true);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  //2 above states are used to set buttons submit id
-  //effect is setting this state after
+  //if login form is visible set button to confirm correct form id
   useEffect(() => {
     if (isLogin) {
       setIsLoginForm(true);
@@ -35,7 +32,13 @@ export default function SignUp() {
     }
   }, [isLogin]);
 
-  //supabase signup/login as fn
+  const onBtnClick = (state: boolean) => {
+    setIsLogin(state);
+    setError("");
+  };
+
+  //fn as a supabase signup or login
+  //on success redirect
   const handleSubmit: handleSubmit = async (e, fn) => {
     e.preventDefault();
     setIsLoading(true);
@@ -49,11 +52,6 @@ export default function SignUp() {
     }
   };
 
-  const onBtnClick = (state: boolean) => {
-    setIsLogin(state);
-    setError("");
-  };
-
   //styles
   const borderBtnStyle = "border-dotted border-2 border-slate-500 ";
   const whiteBtnHover =
@@ -62,16 +60,7 @@ export default function SignUp() {
 
   return (
     <Container className="flex flex-col justify-center items-center w-full h-full">
-      <Alert
-        className={`absolute top-5 min-w-[250px] w-fit max-w-[400px] my-2 transition-top duration-150 ${
-          !error && "-top-[100px]"
-        }`}
-        variant="destructive"
-      >
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
+      <CustomAlert error={error} variant="destructive" />
       <div
         className={`w-full max-w-[500px] md:mb-14 rounded-3xl overflow-hidden border-solid border-green-950 shadow-2xl shadow-green-900`}
       >
